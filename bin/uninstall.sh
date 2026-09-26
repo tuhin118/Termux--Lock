@@ -1,25 +1,25 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-echo "🗑️  Termux-Lock আনইনস্টল হচ্ছে..."
+echo "🗑️  Uninstalling Termux-Lock..."
 
-# .bashrc থেকে হুক সরান
+# Remove hook from .bashrc
 if [ -f "$HOME/.bashrc" ]; then
     sed -i '/termux-lock\/bin\/login.sh/d' "$HOME/.bashrc"
-    echo "✅ .bashrc থেকে হুক সরানো হয়েছে"
+    echo "✅ Hook removed from .bashrc"
 fi
 
-# ইনস্টল ফাইল মুছুন
+# Remove install directory
 if [ -d "$HOME/.termux-lock" ]; then
     rm -rf "$HOME/.termux-lock"
-    echo "✅ ~/.termux-lock মুছে ফেলা হয়েছে"
+    echo "✅ ~/.termux-lock deleted"
 fi
 
-# কমান্ড মুছুন
+# Remove command
 if [ -f "$PREFIX/bin/termux-lock" ]; then
     rm -f "$PREFIX/bin/termux-lock"
-    echo "✅ termux-lock কমান্ড মুছে ফেলা হয়েছে"
+    echo "✅ termux-lock command removed"
 fi
 
 echo
-echo "✅ আনইনস্টল সম্পন্ন!"
-echo "⚠️  Termux বন্ধ করে আবার খুললে লগইন স্ক্রিন আর আসবে না।"
+echo "✅ Uninstall complete!"
+echo "⚠️  Restart Termux. The login screen will no longer appear."
