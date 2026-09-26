@@ -1,0 +1,44 @@
+
+---
+
+### 2️⃣ `install.sh`
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+
+set -e
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+INSTALL_DIR="$HOME/.termux-lock"
+BIN_DIR="$PREFIX/bin"
+
+echo "🔧 Termux-Lock ইনস্টল হচ্ছে..."
+
+# ডিপেন্ডেন্সি
+pkg install openssl openssl-tool figlet -y
+
+# ফাইল কপি
+mkdir -p "$INSTALL_DIR/bin"
+cp "$REPO_DIR/bin/"*.sh "$INSTALL_DIR/bin/"
+chmod +x "$INSTALL_DIR/bin/"*.sh
+
+# কমান্ড রেজিস্টার
+cat > "$BIN_DIR/termux-lock" <<EOF
+#!/data/data/com.termux/files/usr/bin/bash
+case "\$1" in
+    setup) bash "$INSTALL_DIR/bin/setup.sh" ;;
+    login) bash "$INSTALL_DIR/bin/login.sh" ;;
+    reset) bash "$INSTALL_DIR/bin/reset.sh" ;;
+    *) echo "ব্যবহার: termux-lock {setup|login|reset}" ;;
+esac
+EOF
+chmod +x "$BIN_DIR/termux-lock"
+
+# .bashrc হুক
+HOOK='[ -f "$HOME/.termux-lock/bin/login.sh" ] && bash "$HOME/.termux-lock/bin/login.sh"'
+if ! grep -qF "$HOOK" "$HOME/.bashrc" 2>/dev/null; then
+    echo "$HOOK" | cat - "$HOME/.bashrc" > /tmp/bashrc_tmp && mv /tmp/bashrc_tmp "$HOME/.bashrc"
+fi
+
+echo "✅ ইনস্টল সম্পন্ন!"
+echo "এখন 'termux-lock setup' চালিয়ে পাসওয়ার্ড সেট করুন।"
